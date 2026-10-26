@@ -13,3 +13,11 @@ function finish(){clearInterval(interval);active=false;input.disabled=true;start
 start.addEventListener('click',()=>{clearInterval(interval);score=0;remaining=20;active=true;scoreDisplay.textContent='0';timerDisplay.textContent='20';input.value='';input.disabled=false;start.disabled=true;start.textContent='Playing…';statusDisplay.textContent='GO, GO, GO!';help.textContent='Match the word, then press Enter.';nextWord();input.focus();interval=setInterval(()=>{remaining--;timerDisplay.textContent=remaining;if(remaining<=0)finish();},1000);});
 form.addEventListener('submit',event=>{event.preventDefault();if(!active)return;if(input.value.trim().toLowerCase()===target.textContent){score++;scoreDisplay.textContent=score;input.value='';help.textContent='Pop! Keep going.';nextWord();}else{help.textContent='Almost! Match the word above and press Enter.';input.select();}});
 document.getElementById('year').textContent=new Date().getFullYear();
+
+const imageViewer=document.getElementById('image-viewer');
+const viewerImage=document.getElementById('image-viewer-image');
+let lastScreenshot=null;
+document.querySelectorAll('.elevator-shot').forEach(button=>button.addEventListener('click',()=>{lastScreenshot=button;viewerImage.src=button.dataset.image;viewerImage.alt=button.querySelector('img').alt;document.getElementById('image-viewer-caption').textContent=button.dataset.caption;imageViewer.showModal();}));
+document.getElementById('close-viewer').addEventListener('click',()=>imageViewer.close());
+imageViewer.addEventListener('click',event=>{if(event.target===imageViewer){const bounds=imageViewer.getBoundingClientRect();if(event.clientX<bounds.left||event.clientX>bounds.right||event.clientY<bounds.top||event.clientY>bounds.bottom)imageViewer.close();}});
+imageViewer.addEventListener('close',()=>{if(lastScreenshot)lastScreenshot.focus();});
